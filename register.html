@@ -2,37 +2,91 @@
 <html>
 <head>
   <base target="_top">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.js"></script>
   <style>
-    body { font-family: 'Sarabun', sans-serif; text-align: center; padding: 20px; background: #f8f9fa; }
-    video { border-radius: 8px; width: 100%; max-width: 500px; background: #000; transform: scaleX(-1); }
-    .container { max-width: 600px; margin: 0 auto; }
-    input { padding: 12px; width: 70%; font-size: 16px; margin-top: 15px; border: 1px solid #ddd; border-radius: 5px; }
+    :root {
+      --primary-navy: #0f172a;
+      --primary-blue: #2563eb;
+      --success: #10b981;
+      --white: #ffffff;
+    }
+    body { 
+      font-family: 'Sarabun', sans-serif; text-align: center; margin: 0; padding: 20px; 
+      background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%); min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
     
-    button { padding: 12px 25px; font-size: 16px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 15px; }
-    button:disabled { background: #ccc; }
+    .container { 
+      background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px);
+      max-width: 500px; width: 100%; margin: 0 auto; padding: 30px 20px;
+      border-radius: 30px; box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.1);
+      border: 1px solid rgba(255,255,255,0.8);
+    }
+
+    .header-title { color: var(--primary-navy); font-size: 24px; font-weight: 700; margin-bottom: 5px; margin-top: 0; }
+    .instruction { font-size: 14px; color: #64748b; margin-bottom: 20px; background: #f1f5f9; padding: 10px; border-radius: 12px; }
     
-    #msg { margin-top: 15px; font-weight: bold; color: #28a745; min-height: 24px; }
-    .instruction { font-size: 14px; color: #666; margin-bottom: 10px; }
-    .count-badge { background: #6c757d; color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; margin-left: 5px;}
+    .video-wrapper {
+      position: relative; border-radius: 20px; overflow: hidden; background: #000;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1); margin-bottom: 20px; border: 3px solid var(--white);
+    }
+    video { width: 100%; display: block; transform: scaleX(-1); }
+    
+    .input-group { position: relative; margin-bottom: 20px; }
+    .input-group i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 18px; }
+    input { 
+      width: 100%; padding: 16px 20px 16px 50px; font-size: 16px; font-family: 'Sarabun';
+      border: 2px solid #e2e8f0; border-radius: 16px; box-sizing: border-box;
+      outline: none; transition: all 0.3s; background: rgba(255,255,255,0.9);
+    }
+    input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
+    
+    button { 
+      width: 100%; padding: 16px; font-size: 18px; font-weight: 700; font-family: 'Sarabun';
+      background: linear-gradient(135deg, var(--primary-blue) 0%, #1d4ed8 100%); 
+      color: white; border: none; border-radius: 16px; cursor: pointer; 
+      transition: all 0.3s; box-shadow: 0 8px 15px -3px rgba(37, 99, 235, 0.3);
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+    }
+    button:active { transform: scale(0.98); }
+    button:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; color: #64748b; }
+    
+    #msg { margin-top: 15px; font-weight: 600; color: var(--success); min-height: 24px; font-size: 15px; }
+    .count-badge { background: #fef08a; color: #854d0e; padding: 4px 12px; border-radius: 20px; font-size: 14px; margin-left: 8px; font-weight: 700; }
+    
+    #status { display: inline-block; background: var(--light-blue); color: var(--primary-blue); padding: 5px 15px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 15px; }
+
+    .back-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 25px; color: #64748b; text-decoration: none; font-weight: 600; }
+    .back-link:hover { color: var(--primary-navy); }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>👤 ลงทะเบียนใบหน้า</h2>
-    <p class="instruction">💡 เพื่อความแม่นยำ ควรบันทึก 3 มุม (หน้าตรง / หันซ้ายนิดหน่อย / หันขวานิดหน่อย)</p>
+    <h2 class="header-title"><i class="fa-solid fa-face-smile"></i> ลงทะเบียนใบหน้า</h2>
+    <p class="instruction"><i class="fa-solid fa-lightbulb" style="color:#eab308"></i> เพื่อความแม่นยำ ควรบันทึก 3 มุม (หน้าตรง / หันซ้ายนิดหน่อย / หันขวานิดหน่อย)</p>
     
-    <div id="status">กำลังโหลด Model...</div>
-    <video id="video" autoplay muted playsinline></video>
+    <div id="status"><i class="fa-solid fa-spinner fa-spin"></i> กำลังโหลด Model...</div>
     
-    <input type="text" id="username" placeholder="ระบุชื่อพนักงาน (เช่น Admin)">
-    <br>
-    <button id="btnSave" onclick="saveFace()" disabled>📸 บันทึกใบหน้า <span id="saveCount" class="count-badge">0</span></button>
+    <div class="video-wrapper">
+      <video id="video" autoplay muted playsinline></video>
+    </div>
+    
+    <div class="input-group">
+      <i class="fa-solid fa-user"></i>
+      <input type="text" id="username" placeholder="ระบุชื่อพนักงาน (เช่น สมชาย)">
+    </div>
+
+    <button id="btnSave" onclick="saveFace()" disabled>
+      <i class="fa-solid fa-camera"></i> บันทึกใบหน้า <span id="saveCount" class="count-badge">0</span>
+    </button>
     
     <div id="msg"></div>
     
     <? var url = getScriptUrl(); ?>
-    <a href="<?= url ?>" style="display:block; margin-top:20px; color:#666;">← กลับเมนู</a>
+    <a href="<?= url ?>" class="back-link"><i class="fa-solid fa-arrow-left"></i> กลับเมนูหลัก</a>
   </div>
 
   <script>
@@ -56,7 +110,9 @@
       navigator.mediaDevices.getUserMedia({ video: {} })
         .then(stream => {
           video.srcObject = stream;
-          status.innerText = "";
+          status.innerHTML = "<i class='fa-solid fa-check'></i> กล้องพร้อมใช้งาน";
+          status.style.color = "var(--success)";
+          status.style.background = "#d1fae5";
           btnSave.disabled = false;
         });
     }
@@ -66,7 +122,7 @@
       if (!name) return alert("กรุณาใส่ชื่อก่อน");
 
       btnSave.disabled = true;
-      btnSave.innerText = "กำลังประมวลผล...";
+      btnSave.innerHTML = "<i class='fa-solid fa-spinner fa-spin'></i> กำลังประมวลผล...";
       msgDiv.innerText = "";
 
       const detection = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
@@ -74,22 +130,30 @@
       if (detection) {
         const descriptorArray = Array.from(detection.descriptor);
         
-        google.script.run.withSuccessHandler(() => {
+        // สร้างฟังก์ชันสำเร็จเพื่อใช้ซ้ำทั้งตอนรันบน GAS และทดสอบ Local
+        const successCallback = () => {
           saveCounter++;
           saveCountSpan.innerText = saveCounter;
           
-          msgDiv.innerText = `✅ บันทึกครั้งที่ ${saveCounter} สำเร็จ! ลองขยับหน้าเล็กน้อยแล้วกดบันทึกอีกครั้ง`;
+          msgDiv.innerHTML = `<i class='fa-solid fa-circle-check'></i> บันทึกครั้งที่ ${saveCounter} สำเร็จ! ลองขยับหน้าเล็กน้อยแล้วกดอีกครั้ง`;
           
           btnSave.disabled = false;
-          btnSave.innerText = `📸 บันทึกใบหน้าเพิ่ม`;
-          
-          // ไม่เคลียร์ชื่อ เพื่อให้กดซ้ำได้เลย
-        }).registerUser(name, descriptorArray);
+          btnSave.innerHTML = `<i class="fa-solid fa-camera"></i> บันทึกใบหน้าเพิ่ม <span id="saveCount" class="count-badge">${saveCounter}</span>`;
+        };
+
+        // ตรวจสอบว่ามี google.script ให้เรียกใช้หรือไม่
+        if (typeof google !== 'undefined' && google.script) {
+          google.script.run.withSuccessHandler(successCallback).registerUser(name, descriptorArray);
+        } else {
+          // จำลองการทำงานเมื่อทดสอบในหน้า Preview หรือไม่ได้รันบน Apps Script
+          console.warn("ไม่ได้รันบน Google Apps Script: กำลังจำลองการทำงาน...");
+          setTimeout(successCallback, 800);
+        }
         
       } else {
         alert("ไม่พบใบหน้า! กรุณามองกล้องให้ชัดเจน");
         btnSave.disabled = false;
-        btnSave.innerText = "📸 บันทึกใบหน้า";
+        btnSave.innerHTML = `<i class="fa-solid fa-camera"></i> บันทึกใบหน้า <span id="saveCount" class="count-badge">${saveCounter}</span>`;
       }
     }
   </script>
